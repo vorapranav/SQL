@@ -1,0 +1,236 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14960\viewh14660\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs48 \cf0 -- CREATE DATABASE lib_management_database;\
+USE lib_management_database;\
+\
+CREATE TABLE AUTHOR(\
+		author_id INTEGER NOT NULL UNIQUE,\
+		DOB DATE NOT NULL,\
+		author_name VARCHAR(50) NOT NULL,\
+		PRIMARY KEY(Author_id)\
+);\
+\
+\
+CREATE TABLE PUBLISHER(\
+		publisher_id INTEGER NOT NULL UNIQUE,\
+		year_of_publish INTEGER NOT NULL,\
+		publisher_name VARCHAR(50) NOT NULL,\
+		country VARCHAR(50) NOT NULL,\
+		PRIMARY KEY(publisher_id)\
+);\
+	\
+CREATE TABLE LOCATION(\
+		location_id INTEGER NOT NULL UNIQUE,\
+		place_name VARCHAR(20) NOT NULL,\
+		PRIMARY KEY(location_id)\
+);\
+\
+\
+CREATE TABLE LIBRARIAN(\
+		librarian_id INTEGER NOT NULL UNIQUE,\
+		location_id INTEGER NOT NULL UNIQUE,\
+		name VARCHAR(20) NOT NULL,\
+		email VARCHAR(50),\
+		phone INTEGER NOT NULL,\
+		PRIMARY KEY(librarian_id),\
+		FOREIGN KEY (location_id) REFERENCES LOCATION(location_id)\
+);\
+\
+CREATE TABLE BOOK(\
+		Title VARCHAR(20) NOT NULL,\
+		ISBN INTEGER NOT NULL UNIQUE,\
+		department_id INTEGER NOT NULL UNIQUE,\
+		location_id INTEGER NOT NULL UNIQUE,\
+		Language VARCHAR(20) NOT NULL,\
+		edition VARCHAR(20) NOT NULL,\
+		price INTEGER NOT NULL DEFAULT 0,\
+		PRIMARY KEY(ISBN),\
+		FOREIGN KEY (location_id) REFERENCES LOCATION(location_id),\
+		FOREIGN KEY (department_id) REFERENCES DEPARTMENT(department_id)\
+		\
+);\
+\
+CREATE TABLE BORROWERUSER(\
+		fname VARCHAR(20) NOT NULL,\
+		lname VARCHAR(20) NOT NULL,\
+		user_id INTEGER NOT NULL UNIQUE,\
+		ISBN INTEGER NOT NULL UNIQUE,\
+		contact_number INTEGER NOT NULL DEFAULT 0,\
+		gender VARCHAR(2) NOT NULL,\
+		PRIMARY KEY(user_id),\
+		FOREIGN KEY (ISBN) REFERENCES BOOK(ISBN)\
+);\
+\
+\
+CREATE TABLE LOGINDETAILS(\
+		Registration_no INTEGER NOT NULL UNIQUE,\
+		username VARCHAR(20) NOT NULL,\
+		password VARCHAR(20) NOT NULL,\
+		user_idlibrarian_id INTEGER NOT NULL UNIQUE,\
+		tot_books_borrowedlent INTEGER NOT NULL DEFAULT 0,\
+		PRIMARY KEY(Registration_no),\
+		FOREIGN KEY (user_idlibrarian_id) REFERENCES BORROWERUSER (user_id),\
+		FOREIGN KEY (user_idlibrarian_id) REFERENCES LIBRARIAN(librarian_id)\
+);\
+\
+CREATE TABLE borrow(\
+		user_id INTEGER NOT NULL UNIQUE,\
+		ISBN INTEGER NOT NULL UNIQUE,\
+		return_date DATE NOT NULL,\
+		borrow_date DATE NOT NULL,\
+		FOREIGN KEY (user_id) REFERENCES BORROWERUSER(user_id),\
+		FOREIGN KEY (ISBN) REFERENCES BOOK(ISBN)\
+);\
+\
+\
+CREATE TABLE wrote(\
+		author_id INTEGER NOT NULL,\
+		ISBN INTEGER NOT NULL,\
+		FOREIGN KEY (ISBN) REFERENCES BOOK(ISBN),\
+		FOREIGN KEY (author_id) REFERENCES AUTHOR(author_id)\
+);\
+\
+\
+\
+CREATE TABLE publish(\
+		publisher_id INTEGER NOT NULL,\
+		ISBN INTEGER NOT NULL,\
+		FOREIGN KEY (ISBN) REFERENCES BOOK(ISBN),\
+		FOREIGN KEY (publisher_id) REFERENCES PUBLISHER(publisher_id)\
+);\
+\
+\
+ALTER TABLE BORROWERUSER\
+ADD email VARCHAR(20);\
+\
+insert into DEPARTMENT values\
+		(123,\'94programming\'94),\
+		(234,\'94mathematics\'94),\
+		(345,\'94science\'94),\
+		(456,\'94socialstudies\'94),\
+		(546,\'94physics\'94),\
+		(756,\'94chemistry\'94);\
+\
+\
+insert into AUTHOR values\
+(1,1898-08-12,\'94LewisCarrol\'94),\
+(2,1988-08-12,\'94SaiBala\'94),\
+(3,1888-08-12,\'94Subrahmanya\'94),\
+(4,1880-08-12,\'94JaneAusten\'94),\
+(5,2000-08-12,\'94JulesVerne\'94),\
+(6,1999-08-12,\'94Shakespeare\'94);\
+\
+\
+	insert into PUBLISHER values\
+(111,1995,\'94Simon\'94,\'94England\'94),\
+(222,2000,\'94harpercollins\'94,\'94England\'94),\
+(333,2000,\'94Wiley\'94,\'94England\'94),\
+(444,2001,\'94Kelly & Walsh\'94,\'94China\'94),\
+(555,2015,\'94Faryard\'94,\'94France\'94),\
+(666,2014,\'94AsianEd\'94,\'94India\'94);\
+\
+ 	insert into LOCATION values\
+(423,\'94frank\'92slibrary\'94),\
+(4353,\'94weststreetlibrary\'94),\
+(234,\'94southlondonlibrary\'94),\
+(5332,\'94METslibrary\'94),\
+(4533,\'94BalBharatilibrary\'94),\
+(863,\'94frank\'92slibrary\'94);\
+\
+	insert into LIBRARIAN values\
+(11,423,\'94Joyce\'94,\'94Joyce@gmail.com\'94,3334445556),\
+(22,4353,\'94Julie\'94,\'94Julie@gmail.com\'94,3337775556),\
+(33,234,\'94Eric\'94,\'94Eric@gmail.com\'94,7774445556),\
+(44,5332,\'94Joseph\'94,\'94Joseph@gmail.com\'94,9994445556),\
+(55,4533,\'94Manasvi\'94,\'94Manasvi@gmail.com\'94,3338885556),\
+(66,863,\'94Olivia\'94,\'94Olivia@gmail.com\'94,3339495556);\
+\
+insert into BOOK values\
+(\'93Introtoprogramming\'94,676767,123,423,\'94c++\'94,\'942\'94,300),\
+(\'93INTEGRALS\'94,353535,234,4353,\'94irish\'94,\'942\'94,400),\
+(\'93Welcometoscience\'94,474747,345,5332,\'94Hindi\'94,\'942\'94,240),\
+(\'93Politics\'94,161616,456,5332,\'94English\'94,\'942\'94,549),\
+(\'93Thermofluids\'94,102930,546,863,\'94English\'94,\'942\'94,799),\
+(\'93Introtowebprogramming\'94,292838,123,423,\'94HTML\'94,\'941\'94,199);\
+\
+\
+Insert into BORROWERUSER values\
+(\'93James\'94,\'94smith\'94,199991,676767,9992224449,\'94M\'94),\
+(\'93Micheal\'94,\'94smith\'94,199992,353535,9992225585,\'94M\'94),\
+(\'93Maria\'94,\'94gracia\'94,199993,474747,995757449,\'94F\'94),\
+(\'93James\'94,\'94johnson\'94,199994,161616,9992383849,\'94M\'94),\
+(\'93Mary\'94,\'94George\'94,199995,292838,9928384449,\'94F\'94),\
+(\'93David\'94,\'94Mccarty\'94,199996,102930,9078224449,\'94M\'94);\
+\
+\
+	insert into LOGINDETAILS values\
+(11342233,\'94jamess\'94,\'94james123\'94,199991,3),\
+(11343433,\'94joycee\'94,\'94joyce123\'94,11,5),\
+(11343555,\'94cueric\'94,\'94eric123\'94,33,2),\
+(33532344,\'94David\'94,\'94david123\'94,199996,0),\
+(11343532,\'94Manasvi\'94,\'94manasvi123\'94,55,1),\
+(11356464,\'94maryG\'94,\'94mary123\'94,199995,2);\
+\
+\
+Insert into borrow values\
+(199991,676767,2022-10-08,2022-09-27),\
+(199992,474747,2022-9-08,2022-8-13),\
+(199993,353535,2022-5-08,2022-4-05),\
+(199994,161616,2022-6-08,2022-5-07),\
+(199995,292838,2022-7-08,2022-6-22),\
+(199996,102930,2022-3-08,2022-2-21);\
+\
+Insert into wrote values\
+(1,676767),\
+(1,353535),\
+(3,676767),\
+(4,102930),\
+(5,292838),\
+(2,474747);\
+\
+Insert into publish values\
+(111,676767),\
+(111,353535),\
+(333,353535),\
+(444,102930),\
+(555,292838),\
+(222,474747);\
+\
+\
+CREATE VIEW BOOKNEW AS\
+SELECT year_of_publish, book.title\
+FROM PUBLISHER\
+WHERE year_of_publish = 2000;\
+\
+CREATE VIEW RETURNDATES AS\
+SELECT return_date,user_id, BORROWERUSER.fname\
+FROM BORROW\
+ORDER BY return_date desc;\
+\
+CREATE VIEW BOOKNUMBER AS\
+SELECT ISBN,PUBLISH.publisher_id\
+FROM BOOK\
+INNER JOIN PUBLISH\
+ON BOOK.ISBN = PUBLISH.publisher_id;\
+\
+CREATE VIEW password_security AS \
+SELECT *\
+FROM LOGINDEATAILS\
+WHERE password = LOGINDETAILS.password\
+GRANT SELECT ON password_security TO XXX WITH GRANT OPTION;\
+\
+delimiter //\
+CREATE TRIGGER new_price\
+BEFORE INSERT\
+ON BOOK\
+FOR EACH ROW\
+SET new_price = price + 20;\
+\
+Drop trigger new_price;\
+\
+}
